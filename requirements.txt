@@ -1,0 +1,15 @@
+markdown-it-py==3.0.0
+mdurl==0.1.2
+numpy==2.1.1
+pandas==2.2.3
+Pygments==2.18.0
+python-dateutil==2.9.0.post0
+pytz==2024.2
+RapidFuzz==3.10.0
+rich==13.8.1
+ruff==0.6.8
+six==1.16.0
+tabulate==0.9.0
+thefuzz==0.22.1
+tmx2dataframe @ file:///media/souto/257-FLASH/dev/msoutopico/cat-match-lookup/clones/tmx2dataframe
+tzdata==2024.2

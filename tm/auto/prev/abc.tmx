@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tmx SYSTEM "tmx11.dtd">
+<tmx version="1.1">
+  <header creationtool="OmegaTScript" o-tmf="OmegaT TMX" adminlang="EN-US" datatype="plaintext" segtype="sentence" srclang="en"/>
+  <body>
+    <tu>
+      <tuv lang="en">
+        <seg>ADSFADSF</seg>
+      </tuv>
+      <tuv lang="fr-BE" changeid="ANOTHER GUY" changedate="20240930T172056Z" creationid="ORIGINAL-TRANS" creationdate="20230705T141530Z">
+        <seg>QUX-AADSFASDFADSFADLT-AUTO 2023</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <prop type="file">batch/S24030067.html</prop>
+      <prop type="id">tu2_0</prop>
+      <tuv lang="en">
+        <seg>FOO</seg>
+      </tuv>
+      <tuv lang="fr-BE" changeid="ANOTHER GUY" changedate="20240930T172056Z" creationid="ORIGINAL-TRANS" creationdate="20230705T141530Z">
+        <seg>QUX-ALT-AUTO 2023</seg>
+      </tuv>
+    </tu>
+    <tu>
+      <tuv lang="en">
+        <seg>FOO</seg>
+      </tuv>
+      <tuv lang="fr-BE" changeid="ANOTHER GUY" changedate="20240930T172056Z" creationid="ORIGINAL-TRANS" creationdate="20230705T141530Z">
+        <seg>defooault translation</seg>
+      </tuv>
+    </tu>
+  </body>
+</tmx>

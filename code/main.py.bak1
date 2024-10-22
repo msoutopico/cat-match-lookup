@@ -1,0 +1,160 @@
+from tmx2dataframe import tmx2dataframe
+import glob
+from dataclasses import dataclass
+from rich import print
+
+# source_text = input("Source text: ")
+
+@dataclass
+class Segment:
+    source_lang: str
+    source_text: str
+    id: str
+    file: str
+    section: str
+    is_translated: bool
+    has_context: bool
+
+    
+def pprint(matches):
+    for m in matches:
+        print(m)
+
+def compose_segment():
+    return Segment(
+        source_text="FOO",
+        id="tu2_0", # id="tu2_0@item2",
+        file="batch/S24030067.html",
+        section="item2",
+        source_lang="en",
+        is_translated=True,
+        has_context=True
+    )
+
+
+def collect_all_entries():
+    matches = []
+    # Returns a list of names in list files.
+    files = glob.glob('tm/**/*.tmx', recursive = True)
+    for tmx_fpath in files:
+        _, df = tmx2dataframe.read(tmx_fpath)
+        df['filepath'] = tmx_fpath.lstrip("tm/")
+        matches.extend(df.to_dict(orient='records'))
+    return matches
+
+
+def get_ice_matches(segment, matches):
+    # see how many entries are exact matches
+    return [match for match in matches 
+                        if match["source_sentence"] == segment.source_text 
+                        and match["id"] == segment.id
+                        and match["file"] == segment.file]
+    # if none, we have no insertion candidate
+    # if one, we can populate the segment
+    # if more than one, we need more criteria
+
+
+def get_exact_matches(segment, matches):
+    # see how many entries are exact matches
+    return [match for match in matches if match["source_sentence"] == segment.source_text]
+    # if none, we have no insertion candidate
+    # if one, we can populate the segment
+    # if more than one, we need more criteria
+
+
+def filter_matches_by_weight(matches, weight):
+    weighed_matches = [m for m in matches if m["filepath"].startswith(f"{weight}/")]
+    if len(weighed_matches) >= 1:
+        return weighed_matches
+    
+    return matches
+
+
+def sort_matches_by_filepath(matches):
+    sorted_matches = sorted(matches, key=lambda x: x['filepath'])
+    first_filepath = sorted_matches[0]["filepath"]
+    return [m for m in sorted_matches if m["filepath"] == first_filepath]
+
+
+def sort_matches_by_position(matches):
+    sorted_matches = sorted(matches, key=lambda x: x['position'])
+    print("4. Selected the first match from the first file.")
+    return sorted_matches[0]
+
+
+def select_matches(segment, matches):
+    # select ice or exact matches
+    ice_matches = get_ice_matches(segment, matches)
+    pprint(ice_matches)
+    if len(ice_matches) == 1:
+        print("2. (A) One ICE match! Done :)")
+        return ice_matches[0]
+    elif len(ice_matches) > 1:
+        print(f"2. (A) Several ({len(ice_matches)}) ICE matches, apply more criteria: file path.")
+        return ice_matches
+    else:
+        print("2. (A) No ICE matches, look for exact matches without context.")
+        exact_matches = get_exact_matches(segment, matches)
+        if len(exact_matches) == 1:
+            print("2. (B) One exact match! Done :)")
+            return exact_matches[0]
+        elif len(exact_matches) > 0:
+            print(f"2. (B) Several ({len(exact_matches)}) exact matches, apply more criteria: file path.")
+            return exact_matches
+        else:
+            print("2. (B) No exact matches, we can't populate the segment :/")
+            return []
+
+
+def find_populating_matches(segment, matches):
+    # find matches with auto-population power
+    enforced_matches = filter_matches_by_weight(matches, "enforce")
+    # pprint(weighed_matches)
+    if len(enforced_matches) == 1:
+        print("1. One weighed entry, let's see whether it's a match and of which type.")
+        return enforced_matches[0]
+    elif len(enforced_matches) > 1:
+        print(f"1. Several ({len(enforced_matches)}) weighed entries, let's see whether they contain any matches.")
+        matches = enforced_matches
+
+    # find entries with auto-population power
+    auto_matches = filter_matches_by_weight(matches, "auto")
+    # pprint(weighed_matches)
+    if len(auto_matches) == 1:
+        print("1. One weighed entry, let's see whether it's a match and of which type.")
+        return auto_matches[0]
+    elif len(auto_matches) > 1:
+        print(f"1. Several ({len(auto_matches)}) weighed entries, let's see whether they contain any matches.")
+        matches = auto_matches
+
+
+def insert_algorithm():
+    segment = compose_segment()
+    if segment.is_translated and segment.has_context:
+        print("0. The translation will not be updated.")
+
+    entries = collect_all_entries()
+
+    # select entries where there is a match of text with potential context binding
+    matches = select_matches(segment, entries)
+    matches = find_populating_matches(segment, matches)
+        
+
+
+
+
+    sorted_matches = sort_matches_by_filepath(matches)
+    # print(len(sorted_matches))
+    # pprint(sorted_matches)
+    if len(sorted_matches) == 1:
+        print("3. One only match found the first file! Done :)")
+        return sorted_matches[0]
+    elif len(sorted_matches) > 1:
+        print(f"3. Several ({len(sorted_matches)}) matches from the first file, apply more criteria: position")
+        return sort_matches_by_position(sorted_matches)
+
+    
+    
+
+insert_match = insert_algorithm()
+pprint([insert_match])

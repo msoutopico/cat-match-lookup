@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tmx SYSTEM "tmx11.dtd">
+<tmx version="1.1">
+  <header creationtool="OmegaT" o-tmf="OmegaT TMX" adminlang="EN-US" datatype="plaintext" creationtoolversion="5.7.2_0_a1ca79b02" segtype="sentence" srclang="en"/>
+  <body>
+    <tu>
+      <prop type="file">batch/S24030067.html</prop>
+      <prop type="id">tu2_0</prop>
+      <tuv lang="en">
+        <seg>FOO</seg>
+      </tuv>
+      <tuv lang="fr-FR" changeid="VER-CP" changedate="20230713T121530Z" creationid="VER-CP" creationdate="20230705T121530Z">
+        <seg>BAR-ALT-AUTO - 2023</seg>
+      </tuv>
+    </tu>
+  </body>
+</tmx>
